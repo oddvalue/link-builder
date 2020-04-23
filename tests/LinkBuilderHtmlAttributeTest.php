@@ -63,4 +63,9 @@ class LinkBuilderHtmlAttributeTest extends TestCase
     {
         $this->assertTrue(HtmlAttributes::make(['class' => 'foo bar baz boz'])->hasClass('foo'));
     }
+
+    public function testHas()
+    {
+        $this->assertTrue(HtmlAttributes::make(['foo' => 'bar'])->has('foo'));
+    }
 }

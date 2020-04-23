@@ -68,11 +68,11 @@ class HtmlAttributes implements ArrayAccess, Htmlable
 
     public function has($attribute) : bool
     {
-        if ($offset === 'class') {
+        if ($attribute === 'class') {
             return $this->hasClass();
         }
 
-        return array_key_exists($offset, $this->attributes);
+        return array_key_exists($attribute, $this->attributes);
     }
 
     public function addClass($classes)
