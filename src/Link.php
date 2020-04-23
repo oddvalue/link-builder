@@ -9,15 +9,18 @@ class Link implements LinkGenerator
 {
     protected $model;
 
+    protected $attributes;
+
     /**
      * Instantiate the generator with the linkable model
      *
      * @param Linkable $model
-     * @param array $options
+     * @param array $attributes
      */
-    public function __construct(Linkable $model, array $options = [])
+    public function __construct(Linkable $model, array $attributes = [])
     {
         $this->model = $model;
+        $this->setAttributes($attributes);
     }
 
     /**
@@ -43,6 +46,17 @@ class Link implements LinkGenerator
         return (string) $this->model->name;
     }
 
+    public function getAttributes() : HtmlAttributes
+    {
+        return $this->attributes;
+    }
+
+    public function setAttributes(array $attributes)
+    {
+        $this->attributes = HtmlAttributes::make($attributes);
+        return $this;
+    }
+
     /**
      * Generate an HTML link for the model
      *
@@ -51,7 +65,7 @@ class Link implements LinkGenerator
     public function toHtml()
     {
         return <<<HTML
-<a href="{$this->href()}">{$this->label()}</a>
+<a href="{$this->href()}"{$this->attributes}>{$this->label()}</a>
 HTML;
     }
 

@@ -38,4 +38,15 @@ class LinkBuilderLinkTest extends TestCase
         $model->slug = 'foo';
         $this->assertEquals('/foo', $model->getLinkGenerator()->href());
     }
+
+    public function testAttributes()
+    {
+        $str = '<a href="/bar" disabled class="disabled">foo</a>';
+        $model = new LinkableModel;
+        $model->slug = 'bar';
+        $model->name = 'foo';
+        $link = $model->getLinkGenerator();
+        $link->getAttributes()->set(['disabled', 'class' => 'disabled']);
+        $this->assertEquals($str, $link->toHtml());
+    }
 }
