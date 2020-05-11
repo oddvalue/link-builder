@@ -109,7 +109,8 @@ class HtmlAttributes implements ArrayAccess, Htmlable
 
     public function clearClass()
     {
-        return $this->setClass([]);
+        $this->classes = [];
+        return $this;
     }
 
     public function removeClass($class)

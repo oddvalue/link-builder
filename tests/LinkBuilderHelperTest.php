@@ -15,4 +15,11 @@ class LinkBuilderHelperTest extends TestCase
         $model->slug = 'bar';
         $this->assertEquals($str, (string) get_link($model));
     }
+
+    public function testUrlHelper()
+    {
+        $expected = '/foo';
+        $actual = url('foo');
+        $this->assertEquals($expected, $actual);
+    }
 }
