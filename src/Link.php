@@ -9,18 +9,34 @@ class Link implements LinkGenerator
 {
     protected $model;
 
+    protected $options;
+
     protected $attributes;
 
     /**
      * Instantiate the generator with the linkable model
      *
      * @param Linkable $model
-     * @param array $attributes
+     * @param array $options
      */
-    public function __construct(Linkable $model, array $attributes = [])
+    public function __construct(Linkable $model, array $options = [])
     {
         $this->model = $model;
+
+        if (key_exists('class', $options)) {
+            $options['attributes'] = @$options['attributes'] ?: [];
+            $options['attributes']['class'] = $options['class'];
+            unset($options['class']);
+        }
+
+        $attributes = [];
+        if (key_exists('attributes', $options)) {
+            $attributes = $options['attributes'];
+            unset($options['attributes']);
+        }
         $this->setAttributes($attributes);
+
+        $this->options = $options;
     }
 
     /**
@@ -31,7 +47,7 @@ class Link implements LinkGenerator
      */
     public function href() : string
     {
-        return (string) url($this->model->slug ?? '/');
+        return '/' . $this->model->slug;
     }
 
     /**
