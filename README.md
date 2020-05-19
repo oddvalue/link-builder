@@ -19,27 +19,86 @@ $ composer require oddvalue/link-builder
 
 ## Usage
 
-Start by creating a generator class for your model. Generator classes must
-implement [`\Oddvalue\LinkBuilder\Contracts\LinkGenerator`](src/Contracts/LinkGenerator.php).
-This generator class will be responsible for deciding what attributes from the
-model form the link.
+### Creating a Generator
 
-See [`\Oddvalue\LinkBuilder\Link`](src/Link.php) for an example implementation.
+First off you will need a generator class for your model. This generator class
+will be responsible for deciding what the href and label of the link for your
+model should be.
+
+This is the minimum generator setup:
+
+```php
+<?php
+
+namespace App;
+
+use Oddvalue\LinkBuilder\Link;
+
+class ArticleLink extends Link
+{
+    /**
+     * The attribute on the model from which the link href is derived
+     *
+     * @var string
+     */
+    protected $hrefAttribute = 'slug';
+
+    /**
+     * The attribute on the model to use as the link text
+     *
+     * @var string
+     */
+    protected $labelAttribute = 'title';
+}
+```
+
+You don't have to extend [`\Oddvalue\LinkBuilder\Link`](src/Link.php), the only requirement is that the generator implements [`\Oddvalue\LinkBuilder\Contracts\LinkGenerator`](src/Contracts/LinkGenerator.php).
+
+### Preparing Your Model
 
 Next, in your model, implement [`\Oddvalue\LinkBuilder\Contracts\Linkable`](src/Contracts/Linkable.php).
 There is also a trait for ease of use but it is not essential to use it:
 [`\Oddvalue\LinkBuilder\Traits\LinkableTrait`](src/Traits/LinkableTrait.php)
 
-See [`\Oddvalue\LinkBuilder\Models\LinkableModel`](tests/Models/LinkableModel.php)
-for an example implementation.
+For example:
+
+```php
+<?php
+
+namespace App;
+
+use App\ArticleLink;
+use Oddvalue\LinkBuilder\Contracts\Linkable;
+use Oddvalue\LinkBuilder\Traits\LinkableTrait;
+
+class LinkableModel implements Linkable
+{
+    use LinkableTrait;
+
+    public $title;
+    public $slug;
+
+    /**
+     * Get the fully qualified class name of the model's link generator
+     *
+     * @return string
+     */
+    protected function getLinkGeneratorClass()
+    {
+        return ArticleLink::class;
+    }
+}
+```
+
+### Generating Links
 
 Once you have set all your linkable models up with their respective link
-generators you will have a consistent interface for handling URLs and links.
+generators you will have a consistent interface for handling their URLs and links in your app.
 
 e.g.
 
 ``` php
-$model = new LinkableModel;
+$model = new Article;
 
 echo $model->getLinkGenerator()->toHtml();
 # output: <a href="/bar">foo</a>
@@ -68,6 +127,27 @@ echo get_link($model)->label();
 
 echo get_link($model)->href();
 # output: /bar
+```
+
+### Link Attributes
+
+In order to set classes and other attributes on the generated links you may either pass them in via the options array on the `getLinkGenerator(array)` method or you can call the `setAttributes(array)` method on the generator itself.
+
+```php
+$options = [
+    'attributes' => [
+        'class' => ['button', 'is-disabled'],
+        'role' => 'button',
+        'disabled',
+    ]
+];
+
+echo (string) $model->getLinkGenerator($options);
+echo (string) get_link($model, $options);
+
+# output:
+# <a href="/bar" class="button is-disabled" role="button" disabled>foo</a>
+# <a href="/bar" class="button is-disabled" role="button" disabled>foo</a>
 ```
 
 [ico-version]: https://img.shields.io/packagist/v/oddvalue/link-builder.svg?style=flat-square

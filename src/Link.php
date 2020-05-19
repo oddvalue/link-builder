@@ -5,13 +5,44 @@ namespace Oddvalue\LinkBuilder;
 use Oddvalue\LinkBuilder\Contracts\Linkable;
 use Oddvalue\LinkBuilder\Contracts\LinkGenerator;
 
-class Link implements LinkGenerator
+abstract class Link implements LinkGenerator
 {
+    /**
+     * The model we're generating a link for
+     *
+     * @var object
+     */
     protected $model;
 
+    /**
+     * Options array
+     * There's no concrete implementation or use case for this
+     * do with it as you wish
+     *
+     * @var array
+     */
     protected $options;
 
+    /**
+     * Holds the HTML attribute object
+     *
+     * @var \Oddvalue\LinkBuilder\HtmlAttributes
+     */
     protected $attributes;
+
+    /**
+     * The attribute on the model from which the link href is derived
+     *
+     * @var string
+     */
+    protected $hrefAttribute = 'slug';
+
+    /**
+     * The attribute on the model to use as the link text
+     *
+     * @var string
+     */
+    protected $labelAttribute = 'name';
 
     /**
      * Instantiate the generator with the linkable model
@@ -47,7 +78,7 @@ class Link implements LinkGenerator
      */
     public function href() : string
     {
-        return '/' . $this->model->slug;
+        return '/' . $this->model->{$this->hrefAttribute};
     }
 
     /**
@@ -59,14 +90,25 @@ class Link implements LinkGenerator
      */
     public function label() : string
     {
-        return (string) $this->model->name;
+        return (string) $this->model->{$this->labelAttribute};
     }
 
+    /**
+     * Get the HtmlAttributes object
+     *
+     * @return \Oddvalue\LinkBuilder\HtmlAttributes
+     */
     public function getAttributes() : HtmlAttributes
     {
         return $this->attributes;
     }
 
+    /**
+     * Set the link attributes
+     *
+     * @param array $attributes
+     * @return self
+     */
     public function setAttributes(array $attributes)
     {
         $this->attributes = HtmlAttributes::make($attributes);
@@ -81,7 +123,7 @@ class Link implements LinkGenerator
     public function toHtml()
     {
         return <<<HTML
-<a href="{$this->href()}"{$this->attributes}>{$this->label()}</a>
+<a href="{$this->href()}"{$this->getAttributes()}>{$this->label()}</a>
 HTML;
     }
 
