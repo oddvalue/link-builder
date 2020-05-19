@@ -1,5 +1,7 @@
 # Link Builder
 
+A consistent interface for generating URLs and links for php models.
+
 [![Latest Version on Packagist][ico-version]][link-packagist]
 [![Software License][ico-license]](LICENSE.md)
 [![Build Status][ico-travis]][link-travis]
@@ -7,9 +9,21 @@
 [![Quality Score][ico-code-quality]][link-code-quality]
 [![Total Downloads][ico-downloads]][link-downloads]
 
-A consistent interface for generating URLs and links for php models.
+<!-- vscode-markdown-toc -->
+* [Installation](#Installation)
+* [Usage](#Usage)
+	* [Creating a Generator](#CreatingaGenerator)
+	* [Preparing Your Model](#PreparingYourModel)
+	* [Generating Links](#GeneratingLinks)
+	* [Link Attributes](#LinkAttributes)
 
-## Installation
+<!-- vscode-markdown-toc-config
+	numbering=false
+	autoSave=true
+	/vscode-markdown-toc-config -->
+<!-- /vscode-markdown-toc -->
+
+## <a name='Installation'></a>Installation
 
 Via Composer
 
@@ -17,9 +31,9 @@ Via Composer
 $ composer require oddvalue/link-builder
 ```
 
-## Usage
+## <a name='Usage'></a>Usage
 
-### Creating a Generator
+### <a name='CreatingaGenerator'></a>Creating a Generator
 
 First off you will need a generator class for your model. This generator class
 will be responsible for deciding what the href and label of the link for your
@@ -54,7 +68,7 @@ class ArticleLink extends Link
 
 You don't have to extend [`\Oddvalue\LinkBuilder\Link`](src/Link.php), the only requirement is that the generator implements [`\Oddvalue\LinkBuilder\Contracts\LinkGenerator`](src/Contracts/LinkGenerator.php).
 
-### Preparing Your Model
+### <a name='PreparingYourModel'></a>Preparing Your Model
 
 Next, in your model, implement [`\Oddvalue\LinkBuilder\Contracts\Linkable`](src/Contracts/Linkable.php).
 There is also a trait for ease of use but it is not essential to use it:
@@ -90,7 +104,7 @@ class LinkableModel implements Linkable
 }
 ```
 
-### Generating Links
+### <a name='GeneratingLinks'></a>Generating Links
 
 Once you have set all your linkable models up with their respective link
 generators you will have a consistent interface for handling their URLs and links in your app.
@@ -129,7 +143,7 @@ echo get_link($model)->href();
 # output: /bar
 ```
 
-### Link Attributes
+### <a name='LinkAttributes'></a>Link Attributes
 
 In order to set classes and other attributes on the generated links you may either pass them in via the options array on the `getLinkGenerator(array)` method or you can call the `setAttributes(array)` method on the generator itself.
 
