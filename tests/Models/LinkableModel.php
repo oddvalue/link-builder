@@ -19,6 +19,6 @@ class LinkableModel implements Linkable
      */
     protected function getLinkGeneratorClass()
     {
-        return \Oddvalue\LinkBuilder\Link::class;
+        return \Oddvalue\LinkBuilder\Models\LinkableModelLink::class;
     }
 }

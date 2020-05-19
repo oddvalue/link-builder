@@ -2,7 +2,6 @@
 
 namespace Oddvalue\LinkBuilder;
 
-use Oddvalue\LinkBuilder\Link;
 use PHPUnit\Framework\TestCase;
 use Oddvalue\LinkBuilder\HtmlAttributes;
 use Oddvalue\LinkBuilder\Models\LinkableModel;
@@ -129,7 +128,7 @@ class LinkBuilderHtmlAttributeTest extends TestCase
     public function testLinkAttributes()
     {
         $model = new LinkableModel;
-        $link = new Link($model, [
+        $link = $model->getLinkGenerator([
             'attributes' => [
                 'foo' => 'bar',
             ],
@@ -143,7 +142,7 @@ class LinkBuilderHtmlAttributeTest extends TestCase
     public function testLinkClass()
     {
         $model = new LinkableModel;
-        $link = new Link($model, [
+        $link = $model->getLinkGenerator([
             'class' => 'foo',
         ]);
 
